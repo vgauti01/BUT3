@@ -68,6 +68,32 @@ def recherche_dicho(arr, x):
     return -1, iterations, f"Non trouvé - {iterations} iter"
 ```
 
+* Algorithme de **Fibonacci** :
+
+```python
+# Complexité temporelle: O(n)
+# Complexité spatiale: O(n)
+@profile
+def fiboIT(n):
+    fib = [0 for p in range(0, n+1)]
+    fib[0]=0;fib[1]=1
+    for i in range(2,n+1):
+        fib[i]=fib[i-1]+fib[i-2]
+    return(fib)
+
+# Complexité temporelle: O(n)
+# Complexité spatiale: O(1)
+@profile
+def fiboIsT(n):
+    a=0;b=1
+    r=0
+    for i in range(2,n+2):
+        r=a+b
+        b=a
+        a=r
+    return(r)
+```
+
 ## 2. Récursivité
 
 Une fonction **s’appelle elle-même** jusqu’à atteindre un **cas de base**.
@@ -164,53 +190,22 @@ print(f"Tableau trié    : {tableau_trie}")
 * La complexité croît exponentiellement avec la profondeur.
 
 ```python
-def koch_segments(x1, y1, x2, y2, profondeur):
-    """
-    Génère les segments de la courbe de Koch récursivement
-    Complexité : O(4^profondeur) - croissance exponentielle
-    
-    Args:
-        x1, y1: point de départ
-        x2, y2: point d'arrivée
-        profondeur: niveau de récursion (0 = segment simple)
-    
-    Returns:
-        Liste de segments [(x1,y1,x2,y2), ...]
-    """
-    # Cas de base : segment simple
-    if profondeur == 0:
-        return [(x1, y1, x2, y2)]
-    
-    # Calcul des points intermédiaires
-    dx = x2 - x1
-    dy = y2 - y1
-    
-    # Premier tiers
-    x_a = x1 + dx/3
-    y_a = y1 + dy/3
-    
-    # Deuxième tiers
-    x_b = x1 + 2*dx/3
-    y_b = y1 + 2*dy/3
-    
-    # Sommet du triangle équilatéral
-    import math
-    x_c = (x_a + x_b)/2 - (y_b - y_a) * math.sqrt(3)/2
-    y_c = (y_a + y_b)/2 + (x_b - x_a) * math.sqrt(3)/2
-    
-    # Récursion sur les 4 segments
-    segments = []
-    segments.extend(koch_segments(x1, y1, x_a, y_a, profondeur-1))
-    segments.extend(koch_segments(x_a, y_a, x_c, y_c, profondeur-1))
-    segments.extend(koch_segments(x_c, y_c, x_b, y_b, profondeur-1))
-    segments.extend(koch_segments(x_b, y_b, x2, y2, profondeur-1))
-    
-    return segments
+from turtle import *
 
-x1, y1 = 0, 0
-x2, y2 = 300, 0
-prof = 3  # Profondeur de récursion
-segments = koch_segments(x1, y1, x2, y2, prof)
+def koch(l, n):
+    if n <= 0:
+        forward(l)
+    else:
+        koch(l / 3, n - 1)
+        left(60)
+        koch(l / 3, n - 1)
+        right(120)
+        koch(l / 3, n - 1)
+        left(60)
+        koch(l / 3, n - 1)
+
+koch(100, 2)
+done()
 ```
 
 ## 3. Graphes et arbres
@@ -395,6 +390,132 @@ def bfs(s):
 | **Parcours infixé** | Donne les clés triées                     | O(n)       |
 
 > `h` est la hauteur d'un arbre, soit le nombre maximum d'arêtes (ou de niveaux) entre la racine et une feuille.
+
+#### Exemple complet de code d'arbre de recherche binaire:
+
+```python
+class Node:
+    def __init__(self, key, father):
+        self.__key = key
+        self.__father = father
+        self.__left = None
+        self.__right = None
+        self.__marked = False
+        self.__depth = 0
+
+    def mark(self):
+        self.__marked = True
+
+    def unmark(self):
+        self.__marked = False
+        if self.__left:
+            self.__left.unmark()
+        if self.__right:
+            self.__right.unmark()
+
+    def getKey(self):
+        return self.__key
+
+    def isMarked(self):
+        return self.__marked
+
+    def setFather(self, father):
+        self.__father = father
+        if father:
+            self.__depth = father.getDepth() + 1
+        else:
+            self.__depth = 0
+
+    ...
+
+class BinaryTree:
+    def __init__(self):
+        self.__root = None
+        self.add(Node(15))
+        self.add(Node(6))
+        self.add(Node(18))
+        self.add(Node(3))
+        self.add(Node(7))
+        self.add(Node(17))
+        self.add(Node(20))
+        self.add(Node(2))
+        self.add(Node(4))
+        self.add(Node(13))
+        self.add(Node(9))
+
+    def add(self, node):
+        if not self.__root:
+            self.__root = node
+        else:
+            current = self.__root
+            while True:
+                if node.getKey() < current.getKey():
+                    if current.getLeft() is None:
+                        node.setFather(current)
+                        current.setLeft(node)
+                        break
+                    else:
+                        current = current.getLeft()
+                else:
+                    if current.getRight() is None:
+                        vertex.setFather(current)
+                        current.setRight(vertex)
+                        break
+                    else:
+                        current = current.getRight()
+
+    def find(self, key):
+        current = self.__root
+        while True:
+            if key < current.getKey():
+                if current.getLeft() is None:
+                    return None
+                else:
+                    current = current.getLeft()
+            if key > current.getKey():
+                if current.getRight() is None:
+                    return None
+                else:
+                    current = current.getRight()
+            if key == current.getKey():
+                return current
+
+    def findFatherOf(self, key):
+        node = self.find(key)
+        if node is None:
+            return None
+        else:
+            return node.getFather()
+
+    def leafsAtDepth(self, depth):
+        queue = [self.__root]
+        leafs = 0
+        while len(queue) > 0:
+            current = queue.pop(0)
+            if current.isMarked():
+                continue
+            current.mark()
+            if current.getLeft():
+                queue.append(current.getLeft())
+            if current.getRight():
+                queue.append(current.getRight())
+
+            if current.getDepth() == depth and current.getLeft() is None and current.getRight() is None:
+                leafs += 1
+        return leafs
+
+    def BFS(self):
+        queue = [self.__root]
+        while len(queue) > 0:
+            current = queue.pop(0)
+            if current.isMarked():
+                continue
+            current.mark()
+            if current.getLeft():
+                queue.append(current.getLeft())
+            if current.getRight():
+                queue.append(current.getRight())
+```
 
 ## 5. Formules et ordres de grandeur
 
