@@ -306,7 +306,7 @@ def bfs(s):
     ```
 * Détecter un **cycle** (DFS)
     Pour un sommet donné:
-    ```
+    ```python
     def hasCycle(self, start, node):
         node.mark()
         for n in node.getSuccessors():
