@@ -84,8 +84,6 @@ Internet --->  |     Ingress          |
 
 ```
 
----
-
 ## 2. Fonctionnement des principales ressources
 
 ### Namespace
@@ -142,8 +140,6 @@ kubectl exec -it nginx-pod -n ns-demo -- /bin/bash
 kubectl delete pod nginx-pod -n ns-demo
 ```
 
----
-
 ### ReplicaSet
 
 **Maintient un nombre défini de Pods identiques en fonctionnement.**
@@ -178,8 +174,6 @@ kubectl describe rs rs-nginx -n ns-demo
 kubectl scale rs rs-nginx --replicas=4 -n ns-demo
 kubectl delete rs rs-nginx -n ns-demo
 ```
-
----
 
 ### Deployment
 
@@ -232,8 +226,6 @@ kubectl set image deployment/dep-nginx nginx=nginx:1.18 -n ns-demo
 kubectl rollout status deployment/dep-nginx -n ns-demo
 kubectl rollout undo deployment/dep-nginx -n ns-demo
 ```
-
----
 
 ### Service
 
@@ -305,8 +297,6 @@ kubectl port-forward svc/svc-nodeport 8080:80 -n ns-demo
 kubectl delete svc svc-nodeport -n ns-demo
 ```
 
----
-
 ### Ingress
 
 **Point d’entrée HTTP unique vers plusieurs services.**  
@@ -332,8 +322,6 @@ spec:
             port:
               number: 80
 ```
-
----
 
 ## 3. k3s sur Raspberry Pi (Cluster léger)
 
