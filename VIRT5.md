@@ -11,6 +11,13 @@
 
 ### Architecture générale
 
+Un **cluster** Kubernetes est l’ensemble complet qui fait tourner tes conteneurs. Il est composé de plusieurs machines (physiques ou virtuelles) appelées **nodes** reliées entre elles :
+
+- un (ou plusieurs) **Control Plane / Master Node**: C’est le “cerveau” : il planifie, surveille et orchestre tout.
+- des **Worker Nodes** : Ce sont les machines qui exécutent réellement les conteneurs.
+
+> Avec k3s, le même nœud peut jouer les deux rôles.
+
 ```
 +--------------------------------------------------------------------+
 |                      Control Plane (Master)                        |
@@ -80,6 +87,28 @@ Internet --->  |     Ingress          |
 ---
 
 ## 2. Fonctionnement des principales ressources
+
+### Namespace
+
+**Permet d’isoler des ressources dans un cluster.**
+
+- Utile pour séparer les environnements (dev, prod) ou les équipes.
+- Chaque ressource (Pod, Service, etc.) appartient à un namespace.
+
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ns-vgauti01        # Nom du namespace (personnalisé)
+  labels:
+    name: ns-vgauti01      # Label pour faciliter la sélection
+```
+
+```bash
+kubectl create namespace ns-demo
+kubectl get namespaces
+kubectl delete namespace ns-demo
+```
 
 ### Pod
 
@@ -322,7 +351,9 @@ kubectl get pods -A
 kubectl get svc -A
 ```
 
-### Composants intégrés
+### Services intégrés
+
+Des services internes qui tournent dans le namespace `kube-system` :
 
 - **coredns** : résolution DNS interne.  
 - **traefik** : contrôleur Ingress par défaut.  
